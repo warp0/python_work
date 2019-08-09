@@ -89,18 +89,19 @@ args_number=len(sys.argv)
 if sys.argv[1]=="--get":
     initDB()
     for index1 in range(2,args_number):
-        #check for correct syntax
+        
+        #get URL, check for correct syntax & check for time
+        
+        timestamp=datetime.now()
+        url=sys.argv[index1]
+        
         if url[0:1]=="-":
             print("Err:too many commands or wrong argument expression!")
             break
         
         #reset alias_checker
         alias_checker=0
-        
-        #check for time and set url from args
-        timestamp=datetime.now()
-        url=sys.argv[index1]
-        
+          
         #read aliases
         with open("./aliases.cfg", "r") as alias_file:
             alias_map=json.load(alias_file)
@@ -108,18 +109,15 @@ if sys.argv[1]=="--get":
             if alias==url:
                 getcount(alias_map[alias])
                 alias_checker=alias_checker + 1
-                print("alias found")
+                print("alias found and processed")
         
         #if alias check failed - we have valid url:
         if alias_checker < 1:
             getcount(url)
          
         #print obtained data
-        print(tags.url, tags.timestamp)
-        print(tags.dictionary)
-        print(len(tags.dictionary))
-        
-        #record object to database
+        print(tags.timestamp, tags.url, "Tags found: ", tags.dictionary)
+        #record results to database
         recordDB(tags)
 
 elif sys.argv[1]=="--view":
