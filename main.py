@@ -179,10 +179,31 @@ def getcount(url):
         json.dump(log_obj, logfile)
         logfile.write("\n")
 
-
-def main():        
-    #path to database    
-
+def tests():   
+    #getcount
+        try:
+            getcount("non-url")
+        except:
+            try:
+                getcount("https://www.google.com")
+            except:
+                print("Getcount is broken")
+            else: 
+                print("Getcount function works!")
+        else:
+            print("Getcount is broken")
+    #DB    
+        try:
+            tags.url="test"
+            tags.timestamp="0day"
+            tags.dictionary="This is dictionary"
+            recordDB(tags)
+        except:
+            print ("RecordDB is broken. Maybe INIT DB?")
+        else:
+            print ("RecordDB is OK")
+        
+def main():           
 
     #getting args and defining url
     url=""
@@ -190,7 +211,7 @@ def main():
     
     if (var_UI==True) and (var_init_DB==True) and (cl_args[1]=="--get"):
         initDB()
-    elif var_UI==False:
+    elif (var_UI==False) and (cl_args[1]=="--get"):
         prompt = "Do you want to init databases?(y/n)"
         proceed = input(prompt)
         if proceed== "y":
@@ -257,6 +278,12 @@ def main():
         else:
             print("No command received")
 
+
+
+#passings tests
+tests()
+
+#CHECKING WORKMODE UI/CL
 #function to check for arguments passed in command line
 if len(sys.argv) > 1:
     for arguments in sys.argv:
@@ -274,7 +301,5 @@ else:
 if len(sys.argv)==1 and len(cl_args)<2:
     exit()
 
-#tests
-#try getcount("test non url") and catch error
-#try recorddb("wrong object") and catch error
-#try getquery("not url") and receive empty result
+
+
